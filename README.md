@@ -58,4 +58,4 @@ _But you don't need to do any of this at all, so stop!_
 
 The `vcs.revision` and `vcs.time` are exactly the same as `git rev-parse HEAD` and "the date of that commit". So stop mucking with `ldflags`, and _especially_ stop embedding a non-reproducible time. You're working too hard.
 
-This package demonstrates this, and encapsulates it in `version.Get`. If you want to change anything about the behavior, copy the code and go for it. I wrapped it in a [`sync.Once`](https://pkg.go.dev/sync#Once) so it didn't have to read the info each time, in case you call it multiple times. You're welcome.
+This package demonstrates this, and encapsulates it in `version.Get`. If you want to change anything about the behavior, copy the code and go for it. I wrapped it in a [`sync.OnceFunc`](https://pkg.go.dev/sync#OnceFunc) so it didn't have to read the info each time, in case you call it multiple times. You're welcome.
