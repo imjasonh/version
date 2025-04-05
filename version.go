@@ -18,7 +18,6 @@ var ver = Version{
 	Time:     "unknown",
 	Dirty:    false,
 }
-var once sync.Once
 
 func (v Version) String() string {
 	return fmt.Sprintf(`Revision: %s
@@ -27,7 +26,7 @@ Dirty: %t`, v.Revision, v.Time, v.Dirty)
 }
 
 func Get() Version {
-	once.Do(func() {
+	sync.OnceFunc(func() {
 		bi, ok := debug.ReadBuildInfo()
 		if !ok {
 			slog.Warn("version: no build info detected")
@@ -46,6 +45,6 @@ func Get() Version {
 				ver.Dirty = setting.Value == "true"
 			}
 		}
-	})
+	})()
 	return ver
 }
