@@ -12,6 +12,6 @@ func main() {
 }
 ```
 
-This code is not maintained, and I will not accept PRs. Fork it if you want it.
+This code is not maintained, and I will not accept PRs. Fork it if you want it. It's like 50 lines, just copy it into your codebase.
 
 Please stop using `ldflags` to embed this information. Or if you do, at least embed a reproducible time.
