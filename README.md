@@ -14,7 +14,7 @@ func main() {
 
 This code is not maintained, and I will not accept PRs to add features. Fork it if you want it. It's like 50 lines, just copy it into your codebase and go to town.
 
-Please stop using `ldflags` to embed this information. Or if you do, at least embed a reproducible time.
+Please stop using `ldflags` to embed this information.
 
 -----
 
@@ -36,9 +36,13 @@ go build -ldflags="-X 'main.commit=$(git rev-parse HEAD)'"
 
 This was kinda gross, but it worked, so people did it. And _boy_ did they do it. This little trick got cargo-culted all over the place! Anecdotally, basically any Go application you use has its version embedded this way.
 
-Don't believe me? [Here's about 76,000 hits on GitHub for `ldflags` and `golang` in `Makefile`s](https://github.com/search?type=code&q=ldflags+%22golang%22+path%3AMakefile). Not _all_ of these are embedding version information in `ldflags`, but most of them are. And what's worse, they're all doing the same thing in a very non-standard way, not just writing `main.commit`, but all kinds of stuff like `github.com/wish/eventmaster.Version`, [`k8s.io/client-go/pkg/version.gitCommit`](https://github.com/kubernetes/client-go/blob/kubernetes-1.32.3/pkg/version/base.go#L60), [`k8s.io/release-utils/pkg/version.gitCommit`](https://github.com/kubernetes-sigs/release-utils/blob/v0.11.1/version/version.go#L44), and tons more. The cargo-cult has spread far and wide.
+Don't believe me? [Here's about 76,000 hits on GitHub for `ldflags` and `golang` in `Makefile`s](https://github.com/search?type=code&q=ldflags+%22golang%22+path%3AMakefile). Not _all_ of these are embedding version information in `ldflags`, but most of them are.
 
-Sometimes folks also wanted a build date embedded, and okay, sure, we can do that too:
+And what's worse, they're all doing the same thing in a very non-standard way, not just writing `main.commit`, but all kinds of stuff like `github.com/wish/eventmaster.Version`, [`k8s.io/client-go/pkg/version.gitCommit`](https://github.com/kubernetes/client-go/blob/kubernetes-1.32.3/pkg/version/base.go#L60), [`k8s.io/release-utils/pkg/version.gitCommit`](https://github.com/kubernetes-sigs/release-utils/blob/v0.11.1/version/version.go#L44), and tons more. The cargo-cult has spread far and wide.
+
+And, because `ldflags` doesn't care if those values are set, and doesn't care if the value you set doesn't exist, a lot of people _think_ they're doing something when they're not.
+
+Aaaanyway, sometimes folks also wanted a build date embedded, and okay, sure, we can do that too:
 
 ```
 go build -ldflags="-X 'main.buildDate=$(date +%Y-%m-%dT%H:%M:%SZ)'"
