@@ -38,7 +38,15 @@ This was kinda gross, but it worked, so people did it. And _boy_ did they do it.
 
 Don't believe me? [Here's about 76,000 hits on GitHub for `ldflags` and `golang` in `Makefile`s](https://github.com/search?type=code&q=ldflags+%22golang%22+path%3AMakefile). Not _all_ of these are embedding version information in `ldflags`, but most of them are.
 
-And what's worse, they're all doing the same thing in a very non-standard way, not just writing `main.commit`, but all kinds of stuff like `github.com/wish/eventmaster.Version`, [`k8s.io/client-go/pkg/version.gitCommit`](https://github.com/kubernetes/client-go/blob/kubernetes-1.32.3/pkg/version/base.go#L60), [`k8s.io/release-utils/pkg/version.gitCommit`](https://github.com/kubernetes-sigs/release-utils/blob/v0.11.1/version/version.go#L44), and tons more. The cargo-cult has spread far and wide.
+Goreleaser also [documents support for this](https://goreleaser.com/cookbooks/using-main.version/), which has [another five thousand hits](https://github.com/search?q=path%3Agoreleaser.yaml+ldflags&type=code).
+
+And what's worse, they're all doing the same thing in a very non-standard way, not just writing `main.commit`, but all kinds of stuff like
+
+- [`github.com/containerd/containerd/v2/version.Revision`](https://github.com/containerd/containerd/blob/v2.0.4/version/version.go#L31)
+- [`github.com/docker/cli/cli/version.GitCommit`](https://github.com/docker/cli/blob/v28.0.4/cli/version/version.go#L8)
+- [`k8s.io/client-go/pkg/version.gitCommit`](https://github.com/kubernetes/client-go/blob/kubernetes-1.32.3/pkg/version/base.go#L60)
+- [`k8s.io/release-utils/pkg/version.gitCommit`](https://github.com/kubernetes-sigs/release-utils/blob/v0.11.1/version/version.go#L44)
+- and tons more. The cargo-cult has spread far and wide.
 
 And, because `ldflags` doesn't care if those values are set, and doesn't care if the value you set doesn't exist, a lot of people _think_ they're doing something when they're not.
 
