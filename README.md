@@ -70,12 +70,14 @@ As an aside, `k8s.io/client-go` had a [fun bug](https://github.com/kubernetes/ku
 
 _But you don't need to do any of this nonsense at all, so stop!_
 
-**Since Go 1.12, back in 2019**, the Go compiler has embedded this information for you, without you needing to know what an `ldflag` is. You can just call [`debug.ReadBuildInfo`](https://pkg.go.dev/runtime/debug#ReadBuildInfo) and it'll pop right out, along with a bunch of other stuff.
-
-(The embedded information does not include information about the Git tag, presumably because there could be many of them, and they can easily move after the binary is built, so it's really the commit and its time that you care about.)
+**Since Go 1.12, back in 2019**, the Go compiler has embedded this information for you, without you needing to know what an `ldflag` is. You can just call [`debug.ReadBuildInfo`](https://pkg.go.dev/runtime/debug#ReadBuildInfo) and it'll pop right out, along with a bunch of other stuff. In Go 1.24 (Feb 2025), more VCS information was made available.
 
 The `vcs.revision` and `vcs.time` are exactly the same as `git rev-parse HEAD` and "the date of that commit". So stop mucking with `ldflags`, and _especially_ stop embedding a non-reproducible time. You're working too hard.
 
-This package demonstrates embedding `vcs.revision`, `vcs.time` and `vcs.clean` (whether there are non-committed changes), and encapsulates it in `version.Get`.
+This package demonstrates embedding `vcs.revision`, `vcs.time` and `vcs.clean` (whether there are non-committed changes), and the main package version, and encapsulates it in `version.Get`.
+
+If you `go run ./cmd/example` there will be no embedded version info. If you `go build` and then run it, you'll get version info. If you `go install github.com/imjasonh/version/cmd/example@latest` you'll get the specific tag, for the latest semver tag.
+
+---
 
 If you want to change anything about the behavior, copy the code and go for it. I wrapped it in a [`sync.OnceFunc`](https://pkg.go.dev/sync#OnceFunc) so it didn't have to read the info each time, in case you call it multiple times. You're welcome.
